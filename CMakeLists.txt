@@ -27,8 +27,6 @@ if(WIN32)
         VERBATIM)
 endif()
 
-install(TARGETS CMakeSFMLProject)
-
 set(OS_NAME "MacOS")
 set(CPACK_GENERATOR "ZIP;DragNDrop")
 
@@ -37,6 +35,25 @@ set_target_properties(CMakeSFMLProject
         MACOSX_BUNDLE TRUE
         INSTALL_RPATH "$ORIGIN"
 )
+
+if(APPLE)
+    # Set the install name directory for shared libraries to be relative to the executable
+    set(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks")
+
+    # Copy SFML shared libraries into the app bundle
+    install(DIRECTORY ${SFML_BINARY_DIR}/lib/ DESTINATION ${CMAKE_BINARY_DIR}/bin/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks
+            FILES_MATCHING PATTERN "*.dylib")
+
+    # Create a macOS app bundle
+    set(MACOS_BUNDLE_BUNDLE_NAME ${CMAKE_PROJECT_NAME})
+    set(MACOS_BUNDLE_GUI_IDENTIFIER "com.example.${CMAKE_PROJECT_NAME}")
+    set(MACOS_BUNDLE_ICON_FILE "")
+    set(MACOS_BUNDLE_BUNDLE_VERSION "1.0.0")
+    set(MACOS_BUNDLE_SHORT_VERSION_STRING "1.0.0")
+
+    install(TARGETS CMakeSFMLProject
+            BUNDLE DESTINATION . COMPONENT Runtime)
+endif()
 
 # Set the CPack properties
 set(CPACK_BUNDLE_NAME "Example")
