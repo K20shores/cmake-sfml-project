@@ -33,7 +33,7 @@ set(CPACK_GENERATOR "ZIP;DragNDrop")
 set_target_properties(CMakeSFMLProject 
     PROPERTIES 
         MACOSX_BUNDLE TRUE
-        INSTALL_RPATH "$ORIGIN"
+        INSTALL_RPATH "@executable_path/../Frameworks"
 )
 
 if(APPLE)
